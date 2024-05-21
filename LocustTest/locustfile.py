@@ -227,7 +227,7 @@ class User(HttpUser):
             else:
                 print("--SIGNING IN WITH: " + username + " --")
 
-                self.user_id = response_json['user_id']
+                #self.user_id = response_json['user_id']
                 self.access_token = response_json['token']
                 self.headers = Helper.token_header_with_language(self.access_token, 'en')
                 self.company_id = str(DB_Connect.get_company_id(username))
