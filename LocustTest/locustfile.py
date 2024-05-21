@@ -220,6 +220,7 @@ class User(HttpUser):
                                         headers=Helper.basic_header('en'))
 
             response_json = response.json()
+            print(response_json)
             if "title" in response_json and response_json['title'] == "Unable to Log In":
                 print("--UNACTIVATED USER: " + username + " --")
                 raise StopUser()
@@ -230,16 +231,19 @@ class User(HttpUser):
                 self.access_token = response_json['token']
                 self.headers = Helper.token_header_with_language(self.access_token, 'en')
                 self.company_id = str(DB_Connect.get_company_id(username))
-
+                print("--ATTRIBUTES RECIEVED--")
                 for i in range(0, 5):
                     trip = Helper.generate_tracking_trip_with_location(self.user_id, 43.638660, -79.387802)
                     self.client.post("/api/v3/trip", json=trip, headers=self.headers).json()
+                    print("--TRIP " + str(i) + " CREATED--")
 
                 response = self.client.get(
                     "/api/v3/trips?trip_type=business;personal;unclassified&start_date=" + self.yesterday + "&end_date=" +
                     self.today + "&page=1",
                     headers=self.headers)
+                print("--LIST OF TRIPS GOTTEN--")
                 response_json = response.json()
                 self.list_of_trips = response_json['data']
+                print("--DONE ON_START SETUP--")
         else:
             print("NO MORE AVAILABLE USERS")
