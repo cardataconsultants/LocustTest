@@ -2,18 +2,37 @@ import csv
 import os
 from datetime import datetime, timedelta
 
+import dotenv
 from locust import HttpUser, task
 from locust.exception import StopUser
 from filelock import FileLock
 
 from Helper import Helper
-from db_connect import DB_Connect
-
+dotenv.load_dotenv()
 password = os.environ['password']
 
 def print_now(user_id):
     now = str(datetime.now())
     print("USER ID: "+ user_id + "\n TIMESTAMP: " + now)
+
+
+def write_user_list():
+    test_users_csv = []
+    fields = ['username']
+    filename = "test_users.csv"
+    os.path.dirname(__file__) + "/" + filename
+    for prefix in ["FAVR", "CPM", "CAN"]:
+        list_of_users = Helper.get_test_users(133, prefix)
+        for i in list_of_users:
+            user_check = {"username": i}
+            test_users_csv.append(user_check)
+    fields = ['username']
+    filename = 'test_users.csv'
+    lock_path = 'test_users.csv.lock'
+    with open(filename, 'w') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fields)
+        writer.writeheader()
+        writer.writerows(test_users_csv)
 
 def get_available_user():
     list_of_users = []
@@ -43,6 +62,7 @@ def get_available_user():
     except TimeoutError:
         print("Another load testing user currently holds the lock")
 
+write_user_list()
 class User(HttpUser):
     user_id = ""
     access_token = ""
@@ -220,7 +240,6 @@ class User(HttpUser):
                                         headers=Helper.basic_header('en'))
 
             response_json = response.json()
-            print(response_json)
             if "title" in response_json and response_json['title'] == "Unable to Log In":
                 print("--UNACTIVATED USER: " + username + " --")
                 raise StopUser()
@@ -228,25 +247,23 @@ class User(HttpUser):
                 print("--SIGNING IN WITH: " + username + " --")
 
                 self.user_id = response_json['user_id']
-                print("--USER_ID OBTAINED--")
                 self.access_token = response_json['token']
-                print("--ACCESS_TOKEN OBTAINED--")
                 self.headers = Helper.token_header_with_language(self.access_token, 'en')
-                print("--HEADER OBTAINED--")
-                self.company_id = str(DB_Connect.get_company_id(username))
-                print("--COMPANY_ID OBTAINED--")
+                if "FAVR" in username:
+                    self.company_id = "41"
+                elif "CAN" in username:
+                    self.company_id = "364"
+                else:
+                    self.company_id = "93"
                 for i in range(0, 5):
                     trip = Helper.generate_tracking_trip_with_location(self.user_id, 43.638660, -79.387802)
                     self.client.post("/api/v3/trip", json=trip, headers=self.headers).json()
-                    print("--TRIP " + str(i) + " CREATED--")
 
                 response = self.client.get(
                     "/api/v3/trips?trip_type=business;personal;unclassified&start_date=" + self.yesterday + "&end_date=" +
                     self.today + "&page=1",
                     headers=self.headers)
-                print("--LIST OF TRIPS GOTTEN--")
-                # response_json = response.json()
-                # self.list_of_trips = response_json['data']
-                print("--DONE ON_START SETUP--")
+                response_json = response.json()
+                self.list_of_trips = response_json['data']
         else:
             print("NO MORE AVAILABLE USERS")
