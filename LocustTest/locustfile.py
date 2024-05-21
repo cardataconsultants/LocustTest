@@ -226,12 +226,15 @@ class User(HttpUser):
                 raise StopUser()
             else:
                 print("--SIGNING IN WITH: " + username + " --")
-                print("--NEXT STEP ACHIEVED--")
-                #self.user_id = response_json['user_id']
-                # self.access_token = response_json['token']
-                # self.headers = Helper.token_header_with_language(self.access_token, 'en')
-                # self.company_id = str(DB_Connect.get_company_id(username))
-                # print("--ATTRIBUTES RECIEVED--")
+
+                self.user_id = response_json['user_id']
+                print("--USER_ID OBTAINED--")
+                self.access_token = response_json['token']
+                print("--ACCESS_TOKEN OBTAINED--")
+                self.headers = Helper.token_header_with_language(self.access_token, 'en')
+                print("--HEADER OBTAINED--")
+                self.company_id = str(DB_Connect.get_company_id(username))
+                print("--COMPANY_ID OBTAINED--")
                 for i in range(0, 5):
                     trip = Helper.generate_tracking_trip_with_location(self.user_id, 43.638660, -79.387802)
                     self.client.post("/api/v3/trip", json=trip, headers=self.headers).json()
