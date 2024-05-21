@@ -156,3 +156,13 @@ class Helper:
         trip["trip_date"] = now.strftime("%Y-%m-%d")
         trip["uuid"] = str(my_uuid)
         return trip
+
+    @classmethod
+    def get_test_users(cls, user_count, prefix):
+        first_name = "Q"
+        last_name = "QA"
+        array_of_usernames = []
+        for i in range(1, user_count + 1):
+            username = first_name + last_name + prefix + str(i)
+            array_of_usernames.append(username)
+        return array_of_usernames
