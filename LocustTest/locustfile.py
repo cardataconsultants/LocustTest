@@ -226,7 +226,7 @@ class User(HttpUser):
                 raise StopUser()
             else:
                 print("--SIGNING IN WITH: " + username + " --")
-
+                print("--NEXT STEP ACHIEVED--")
                 #self.user_id = response_json['user_id']
                 self.access_token = response_json['token']
                 self.headers = Helper.token_header_with_language(self.access_token, 'en')
