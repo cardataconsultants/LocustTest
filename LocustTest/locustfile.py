@@ -11,4 +11,8 @@ class QuickstartUser(HttpUser):
 
 
     def on_start(self):
-        print("ON START: ")
+        response = self.client.post("/api/login",
+                                    json={"username": "qadriver",
+                                          "password": "Hsmfwfyfef7!"},
+                                    headers={'Accept-Language': 'en', 'Content-Type': 'application/json'})
+        print(response.json())
