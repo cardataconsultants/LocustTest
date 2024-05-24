@@ -7,7 +7,12 @@ from locust import HttpUser, task
 from locust.exception import StopUser
 from filelock import FileLock
 
-from Helper import Helper
+from LocustTest.Helper.Helper import Helper
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).parent))
+
 dotenv.load_dotenv()
 password = os.environ['password']
 
