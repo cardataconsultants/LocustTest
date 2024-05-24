@@ -27,7 +27,7 @@ def write_user_list():
     filename = "test_users.csv"
     os.path.dirname(__file__) + "/" + filename
     for prefix in ["FAVR", "CPM", "CAN"]:
-        list_of_users = Helper.get_test_users(133, prefix)
+        list_of_users = Helper.Helper.get_test_users(133, prefix)
         for i in list_of_users:
             user_check = {"username": i}
             test_users_csv.append(user_check)
@@ -90,7 +90,7 @@ class User(HttpUser):
         #print_now(str(self.user_id))
 
         # print("CREATING TRACKING TRIP FOR: " + str(self.user_id))
-        trip = Helper.generate_tracking_trip_with_location(self.user_id, 43.638660, -79.387802)
+        trip = Helper.Helper.generate_tracking_trip_with_location(self.user_id, 43.638660, -79.387802)
 
         response_json = (self.client.post("/api/v3/trip", json=trip, headers=self.headers)).json()
         self.list_of_trips.append(response_json)
@@ -178,7 +178,7 @@ class User(HttpUser):
     def create_manual_trip(self):
         #print_now(str(self.user_id))
 
-        trip = Helper.generate_manual_trip("CA", "CA", self.user_id,
+        trip = Helper.Helper.generate_manual_trip("CA", "CA", self.user_id,
                                            None, None,
                                            None, None)
 
@@ -242,7 +242,7 @@ class User(HttpUser):
             response = self.client.post("/api/login",
                                         json={"username": username,
                                               "password": password},
-                                        headers=Helper.basic_header('en'))
+                                        headers=Helper.Helper.basic_header('en'))
 
             response_json = response.json()
             if "title" in response_json and response_json['title'] == "Unable to Log In":
@@ -253,7 +253,7 @@ class User(HttpUser):
 
                 self.user_id = response_json['user_id']
                 self.access_token = response_json['token']
-                self.headers = Helper.token_header_with_language(self.access_token, 'en')
+                self.headers = Helper.Helper.token_header_with_language(self.access_token, 'en')
                 if "FAVR" in username:
                     self.company_id = "41"
                 elif "CAN" in username:
@@ -261,7 +261,7 @@ class User(HttpUser):
                 else:
                     self.company_id = "93"
                 for i in range(0, 5):
-                    trip = Helper.generate_tracking_trip_with_location(self.user_id, 43.638660, -79.387802)
+                    trip = Helper.Helper.generate_tracking_trip_with_location(self.user_id, 43.638660, -79.387802)
                     self.client.post("/api/v3/trip", json=trip, headers=self.headers).json()
 
                 response = self.client.get(
