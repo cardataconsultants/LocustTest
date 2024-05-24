@@ -7,7 +7,7 @@ from locust import HttpUser, task
 from locust.exception import StopUser
 from filelock import FileLock
 
-from Helper import Helper
+import Helper
 import sys
 from pathlib import Path
 
