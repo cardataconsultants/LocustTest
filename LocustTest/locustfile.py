@@ -119,7 +119,7 @@ class User(HttpUser):
         self.client.get(
             "/api/company/" + str(self.company_id) + "/driver/" + str(
                 self.user_id) + "/trip_save_stops?date=" + self.today + "&short_list=1",
-            headers=self.headers)
+            headers=self.headers, name='/api/company/{id}/{user_id}/trip_save_stops?date=2024-05-27&amp;short_list=1')
 
     @task(33)
     def get_mileage(self):
@@ -188,13 +188,13 @@ class User(HttpUser):
     def get_user_schedule(self):
         #print_now(str(self.user_id))
 
-        self.client.get("/api/user/" + str(self.user_id) + "/schedule", headers=self.headers)
+        self.client.get("/api/user/" + str(self.user_id) + "/schedule", headers=self.headers, name='/api/user/{user_id}/schedule')
 
     @task(16)
     def get_user_schedule_v4(self):
         #print_now(str(self.user_id))
 
-        self.client.get("/api/v4/user/" + str(self.user_id) + "/schedule", headers=self.headers)
+        self.client.get("/api/v4/user/" + str(self.user_id) + "/schedule", headers=self.headers, name='/api/v4/user/{user_id}/schedule')
 
     # @task(3)
     # def get_tracking_trips(self):
@@ -214,7 +214,7 @@ class User(HttpUser):
         if trip is None:
             return
         trip_id = str(trip['id'])
-        self.client.delete("/tracking/trip/" + trip_id, headers=self.headers)
+        self.client.delete("/tracking/trip/" + trip_id, headers=self.headers, name='/tracking/trip/{trip_id}')
 
     #
     @task(1)
