@@ -245,6 +245,13 @@ class User(HttpUser):
                                         headers=Helper.Helper.basic_header('en'))
 
             response_json = response.json()
+            if response.status_code == 504:
+                response = self.client.post("/api/login",
+                                            json={"username": username,
+                                                  "password": password},
+                                            headers=Helper.Helper.basic_header('en'))
+
+                response_json = response.json()
             if "title" in response_json and response_json['title'] == "Unable to Log In":
                 print("--UNACTIVATED USER: " + username + " --")
                 raise StopUser()
