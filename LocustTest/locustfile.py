@@ -27,7 +27,7 @@ def write_user_list():
     filename = "test_users.csv"
     os.path.dirname(__file__) + "/" + filename
     for prefix in ["FAVR", "CPM", "CAN"]:
-        list_of_users = Helper.Helper.get_test_users(140, prefix)
+        list_of_users = Helper.Helper.get_test_users(170, prefix)
         for i in list_of_users:
             user_check = {"username": i}
             test_users_csv.append(user_check)
