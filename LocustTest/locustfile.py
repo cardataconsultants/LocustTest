@@ -27,7 +27,7 @@ def write_user_list():
     filename = "test_users.csv"
     os.path.dirname(__file__) + "/" + filename
     for prefix in ["FAVR", "CPM", "CAN"]:
-        list_of_users = Helper.Helper.get_test_users(150, prefix)
+        list_of_users = Helper.Helper.get_test_users(134, prefix)
         for i in list_of_users:
             user_check = {"username": i}
             test_users_csv.append(user_check)
@@ -272,3 +272,4 @@ class User(HttpUser):
                 self.list_of_trips = response_json['data']
         else:
             print("NO MORE AVAILABLE USERS")
+            raise StopUser()
