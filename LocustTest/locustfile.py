@@ -76,8 +76,7 @@ class User(HttpUser):
     list_of_trips = []
     yesterday = (datetime.today() - timedelta(days=1)).strftime("%Y-%m-%d")
     today = (datetime.today()).strftime("%Y-%m-%d")
-    cloud_url = os.environ['cloud_api_url']
-
+    url = os.environ['cloud_api_url']
 
     @task(221)
     def get_mileage_daily(self):
