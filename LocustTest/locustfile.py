@@ -80,19 +80,19 @@ class User(HttpUser):
 
     @task(25)
     def get_units(self):
-        self.client.get("/api/getUnits/CA")
+        self.client.get("/api/getUnits/CA", headers=self.headers)
 
     @task(25)
     def get_distance(self):
-        self.client.get("/api/getDistance?lat1=43.638779&lng1=-79.380653&lat2=43.873810&lng2=-78.963410&country=CA")
+        self.client.get("/api/getDistance?lat1=43.638779&lng1=-79.380653&lat2=43.873810&lng2=-78.963410&country=CA", headers=self.headers)
 
     @task(25)
     def get_geocode(self):
-        self.client.get("/api/geocode?street=207")
+        self.client.get("/api/geocode?street=207", headers=self.headers)
 
     @task(25)
     def get_reverse_geocode(self):
-        self.client.get("/api/reverseGeocode?latitude=43.638779&longitude=-79.380653")
+        self.client.get("/api/reverseGeocode?latitude=43.638779&longitude=-79.380653", headers=self.headers)
 
     # @task(221)
     # def get_mileage_daily(self):
