@@ -246,11 +246,11 @@ class User(HttpUser):
     #         long_2,
     #         headers=self.headers)
 
-    @task
-    def get_stops(self):
-        #print_now(str(self.user_id))
-
-        self.client.get("/api/stops", headers=self.headers)
+    # @task
+    # def get_stops(self):
+    #     #print_now(str(self.user_id))
+    #
+    #     self.client.get("/api/stops", headers=self.headers)
 
     def on_start(self):
         username = get_available_user()
