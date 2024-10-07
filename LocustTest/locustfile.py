@@ -259,9 +259,13 @@ class User(HttpUser):
 
             response_json = response.json()
             if response.status_code == 504:
-                response = self.client.post("/api/login",
-                                            json={"username": username,
-                                                  "password": password},
+                response = self.client.post("https://identity-staging.cardataconsultants.com/",
+                                            json={ "client_id": 2,
+            "client_secret": "'LVF1QzDBHzfwNxse09PbGfttXbYibgGcv5wgAMB3'",
+            "grant_type": "password",
+            "scope": "cardata-online",
+            "username": username,
+            "password": password},
                                             headers=Helper.Helper.basic_header('en'))
 
                 response_json = response.json()
@@ -272,7 +276,7 @@ class User(HttpUser):
                 print("--SIGNING IN WITH: " + username + " --")
 
                 self.user_id = response_json['user_id']
-                self.access_token = response_json['token']
+                self.access_token = response_json['access_token']
                 self.headers = Helper.Helper.token_header_with_language(self.access_token, 'en')
                 if "FAVR" in username:
                     self.company_id = "41"
@@ -280,16 +284,16 @@ class User(HttpUser):
                     self.company_id = "364"
                 else:
                     self.company_id = "93"
-                for i in range(0, 5):
-                    trip = Helper.Helper.generate_tracking_trip_with_location(self.user_id, 43.638660, -79.387802)
-                    self.client.post("/api/v3/trip", json=trip, headers=self.headers).json()
+                # for i in range(0, 5):
+                #     trip = Helper.Helper.generate_tracking_trip_with_location(self.user_id, 43.638660, -79.387802)
+                #     self.client.post("/api/v3/trip", json=trip, headers=self.headers).json()
 
-                response = self.client.get(
-                    "/api/v3/trips?trip_type=business;personal;unclassified&start_date=" + self.yesterday + "&end_date=" +
-                    self.today + "&page=1",
-                    headers=self.headers)
-                response_json = response.json()
-                self.list_of_trips = response_json['data']
+                # response = self.client.get(
+                #     "/api/v3/trips?trip_type=business;personal;unclassified&start_date=" + self.yesterday + "&end_date=" +
+                #     self.today + "&page=1",
+                #     headers=self.headers)
+                # response_json = response.json()
+                # self.list_of_trips = response_json['data']
         else:
             print("NO MORE AVAILABLE USERS")
             raise StopUser()
