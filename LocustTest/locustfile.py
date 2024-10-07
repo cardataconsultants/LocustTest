@@ -78,6 +78,22 @@ class User(HttpUser):
     today = (datetime.today()).strftime("%Y-%m-%d")
     url = os.environ['cloud_api_url']
 
+    @task
+    def get_units(self):
+        self.client.get("https://map-staging.cardataconsultants.com/api/getUnits/CA")
+
+    @task
+    def get_distance(self):
+        self.client.get("https://map-staging.cardataconsultants.com/api/getDistance?lat1=43.638779&lng1=-79.380653&lat2=43.873810&lng2=-78.963410&country=CA")
+
+    @task
+    def get_geocode(self):
+        self.client.get("https://map-staging.cardataconsultants.com/api/geocode?street=207")
+
+    @task
+    def get_reverse_geocode(self):
+        self.client.get("https://map-staging.cardataconsultants.com/api/reverseGeocode?latitude=43.638779&longitude=-79.380653")
+
     @task(221)
     def get_mileage_daily(self):
         # print("GETTING MILEAGE FOR: " + str(self.user_id))
