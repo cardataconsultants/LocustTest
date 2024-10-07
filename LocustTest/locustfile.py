@@ -78,15 +78,16 @@ class User(HttpUser):
     today = (datetime.today()).strftime("%Y-%m-%d")
     cloud_url = os.environ['cloud_api_url']
 
+    @task()
     def maps_get_units(self):
         self.client.get("/api/getUnits/CA")
-
+    @task
     def maps_get_distance(self):
         self.client.get("/api/getDistance?lat1=43.638779&lng1=-79.380653&lat2=43.873810&lng2=-78.963410&country=CA")
-
+    @task()
     def maps_get_geocode(self):
         self.client.get("/api/geocode?street=1600 Pennsylvania Avenue NW&city=Washington&state=DC&zip=20500&country=US")
-
+    @task()
     def maps_get_reverse_geocode(self):
         self.client.get("/api/reverseGeocode?latitude=43.638779&longitude=-79.380653")
 
