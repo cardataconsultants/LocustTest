@@ -77,6 +77,7 @@ class User(HttpUser):
     yesterday = (datetime.today() - timedelta(days=1)).strftime("%Y-%m-%d")
     today = (datetime.today()).strftime("%Y-%m-%d")
     cloud_url = os.environ['cloud_api_url']
+    identity_url = os.environ['identity_api_url']
 
     @task(25)
     def maps_get_units(self):
@@ -252,16 +253,20 @@ class User(HttpUser):
     def on_start(self):
         username = get_available_user()
         if username is not None:
-            response = self.client.post("/api/login",
-                                        json={"username": username,
-                                              "password": password},
+            response = self.client.post(self.identity_url,
+                                        json={ "client_id": 2,
+            "client_secret": "LVF1QzDBHzfwNxse09PbGfttXbYibgGcv5wgAMB3",
+            "grant_type": "password",
+            "scope": "cardata-online",
+            "username": username,
+            "password": password},
                                         headers=Helper.Helper.basic_header('en'))
 
             response_json = response.json()
             if response.status_code == 504:
-                response = self.client.post("https://identity-staging.cardataconsultants.com/",
+                response = self.client.post(self.identity_url,
                                             json={ "client_id": 2,
-            "client_secret": "'LVF1QzDBHzfwNxse09PbGfttXbYibgGcv5wgAMB3'",
+            "client_secret": "LVF1QzDBHzfwNxse09PbGfttXbYibgGcv5wgAMB3",
             "grant_type": "password",
             "scope": "cardata-online",
             "username": username,
