@@ -300,10 +300,10 @@ class User(HttpUser):
 
                 for i in range(0, 5):
                     trip = Helper.Helper.generate_tracking_trip_with_location(self.user_id, 43.638660, -79.387802)
-                    self.client.post("/api/v3/trip", json=trip, headers=self.headers).json()
+                    self.client.post("https://api-staging.mi-route.com/api/v3/trip", json=trip, headers=self.headers).json()
 
                 response = self.client.get(
-                    "/api/v3/trips?trip_type=business;personal;unclassified&start_date=" + self.yesterday + "&end_date=" +
+                    "https://api-staging.mi-route.com/api/v3/trips?trip_type=business;personal;unclassified&start_date=" + self.yesterday + "&end_date=" +
                     self.today + "&page=1",
                     headers=self.headers)
                 response_json = response.json()
