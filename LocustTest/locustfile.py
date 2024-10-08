@@ -81,19 +81,19 @@ class User(HttpUser):
 
     @task
     def get_units(self):
-        self.client.get("api/getUnits/CA", headers=self.headers)
+        self.client.get("https://map-staging.cardataconsultants.com/api/getUnits/CA", headers=self.headers)
 
     @task
     def get_distance(self):
-        self.client.get("/api/getDistance?lat1=43.638779&lng1=-79.380653&lat2=43.873810&lng2=-78.963410&country=CA", headers=self.headers)
+        self.client.get("https://map-staging.cardataconsultants.com/api/getDistance?lat1=43.638779&lng1=-79.380653&lat2=43.873810&lng2=-78.963410&country=CA", headers=self.headers)
 
     @task
     def get_geocode(self):
-        self.client.get("/api/geocode?street=207 Queens Quay W&city=Toronto&state=ON&zip=M5J 1A7&country=CA", headers=self.headers)
+        self.client.get("https://map-staging.cardataconsultants.com/api/geocode?street=207 Queens Quay W&city=Toronto&state=ON&zip=M5J 1A7&country=CA", headers=self.headers)
 
     @task
     def get_reverse_geocode(self):
-        self.client.get("/api/reverseGeocode?latitude=43.638779&longitude=-79.380653", headers=self.headers)
+        self.client.get("https://map-staging.cardataconsultants.com/api/reverseGeocode?latitude=43.638779&longitude=-79.380653", headers=self.headers)
 
     # @task(221)
     # def get_mileage_daily(self):
