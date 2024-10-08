@@ -163,7 +163,7 @@ class Helper:
         first_name = "Q"
         last_name = "QA"
         array_of_usernames = []
-        for i in range(1, user_count + 1):
+        for i in range(2, user_count + 1):
             username = first_name + last_name + prefix + str(i)
             array_of_usernames.append(username)
         return array_of_usernames
