@@ -17,9 +17,10 @@ sys.path.append(str(Path(__file__).parent))
 dotenv.load_dotenv()
 password = os.environ['password']
 
+
 def print_now(user_id):
     now = str(datetime.now())
-    print("USER ID: "+ user_id + "\n TIMESTAMP: " + now)
+    print("USER ID: " + user_id + "\n TIMESTAMP: " + now)
 
 
 def write_user_list():
@@ -39,6 +40,7 @@ def write_user_list():
         writer = csv.DictWriter(csvfile, fieldnames=fields)
         writer.writeheader()
         writer.writerows(test_users_csv)
+
 
 def get_available_user():
     list_of_users = []
@@ -68,7 +70,10 @@ def get_available_user():
     except TimeoutError:
         print("Another load testing user currently holds the lock")
 
+
 write_user_list()
+
+
 class User(HttpUser):
     user_id = ""
     access_token = ""
@@ -81,19 +86,26 @@ class User(HttpUser):
 
     @task
     def get_units(self):
-        self.client.get("https://map-staging.cardataconsultants.com/api/getUnits/CA", headers=self.headers)
+        self.client.get("https://map-staging.cardataconsultants.com/api/getUnits/CA", name="/api/getUnits/CA",
+                        headers=self.headers)
 
     @task
     def get_distance(self):
-        self.client.get("https://map-staging.cardataconsultants.com/api/getDistance?lat1=43.638779&lng1=-79.380653&lat2=43.873810&lng2=-78.963410&country=CA", headers=self.headers)
+        self.client.get(
+            "https://map-staging.cardataconsultants.com/api/getDistance?lat1=43.638779&lng1=-79.380653&lat2=43.873810&lng2=-78.963410&country=CA",
+            name="/api/getDistance", headers=self.headers)
 
     @task
     def get_geocode(self):
-        self.client.get("https://map-staging.cardataconsultants.com/api/geocode?street=207 Queens Quay W&city=Toronto&state=ON&zip=M5J 1A7&country=CA", headers=self.headers)
+        self.client.get(
+            "https://map-staging.cardataconsultants.com/api/geocode?street=207 Queens Quay W&city=Toronto&state=ON&zip=M5J 1A7&country=CA",
+            name="/api/geocode", headers=self.headers)
 
     @task
     def get_reverse_geocode(self):
-        self.client.get("https://map-staging.cardataconsultants.com/api/reverseGeocode?latitude=43.638779&longitude=-79.380653", headers=self.headers)
+        self.client.get(
+            "https://map-staging.cardataconsultants.com/api/reverseGeocode?latitude=43.638779&longitude=-79.380653",
+            name="/api/reverseGeocode", headers=self.headers)
 
     # @task(221)
     # def get_mileage_daily(self):
