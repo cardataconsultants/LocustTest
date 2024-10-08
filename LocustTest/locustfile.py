@@ -78,21 +78,21 @@ class User(HttpUser):
     today = (datetime.today()).strftime("%Y-%m-%d")
     url = os.environ['cloud_api_url']
 
-    @task(25)
-    def get_units(self):
-        self.client.get("/api/getUnits/CA", headers=self.headers)
-
-    @task(25)
-    def get_distance(self):
-        self.client.get("/api/getDistance?lat1=43.638779&lng1=-79.380653&lat2=43.873810&lng2=-78.963410&country=CA", headers=self.headers)
-
-    @task(25)
-    def get_geocode(self):
-        self.client.get("/api/geocode?street=207", headers=self.headers)
-
-    @task(25)
-    def get_reverse_geocode(self):
-        self.client.get("/api/reverseGeocode?latitude=43.638779&longitude=-79.380653", headers=self.headers)
+    # @task(25)
+    # def get_units(self):
+    #     self.client.get("/api/getUnits/CA", headers=self.headers)
+    #
+    # @task(25)
+    # def get_distance(self):
+    #     self.client.get("/api/getDistance?lat1=43.638779&lng1=-79.380653&lat2=43.873810&lng2=-78.963410&country=CA", headers=self.headers)
+    #
+    # @task(25)
+    # def get_geocode(self):
+    #     self.client.get("/api/geocode?street=207", headers=self.headers)
+    #
+    # @task(25)
+    # def get_reverse_geocode(self):
+    #     self.client.get("/api/reverseGeocode?latitude=43.638779&longitude=-79.380653", headers=self.headers)
 
     @task(221)
     def get_mileage_daily(self):
@@ -255,14 +255,14 @@ class User(HttpUser):
     def on_start(self):
         username = get_available_user()
         if username is not None:
-            response = self.client.post("https://api-staging.mi-route.com/api/login",
+            response = self.client.post("/api/login",
                                         json={"username": username,
                                               "password": password},
                                         headers=Helper.Helper.basic_header('en'))
 
             response_json = response.json()
             if response.status_code == 504:
-                response = self.client.post("https://api-staging.mi-route.com/api/login",
+                response = self.client.post("/api/login",
                                             json={"username": username,
                                                   "password": password},
                                             headers=Helper.Helper.basic_header('en'))
