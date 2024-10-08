@@ -1,5 +1,6 @@
 import csv
 import os
+import time
 from datetime import datetime, timedelta
 
 import dotenv
@@ -80,19 +81,19 @@ class User(HttpUser):
 
     @task
     def get_units(self):
-        self.client.get("https://map-staging.cardataconsultants.com/api/getUnits/CA", headers=self.headers)
+        self.client.get("api/getUnits/CA", headers=self.headers)
 
     @task
     def get_distance(self):
-        self.client.get("https://map-staging.cardataconsultants.com/api/getDistance?lat1=43.638779&lng1=-79.380653&lat2=43.873810&lng2=-78.963410&country=CA", headers=self.headers)
+        self.client.get("/api/getDistance?lat1=43.638779&lng1=-79.380653&lat2=43.873810&lng2=-78.963410&country=CA", headers=self.headers)
 
     @task
     def get_geocode(self):
-        self.client.get("https://map-staging.cardataconsultants.com/api/geocode?street=207", headers=self.headers)
+        self.client.get("/api/geocode?street=207", headers=self.headers)
 
     @task
     def get_reverse_geocode(self):
-        self.client.get("https://map-staging.cardataconsultants.com/api/reverseGeocode?latitude=43.638779&longitude=-79.380653", headers=self.headers)
+        self.client.get("/api/reverseGeocode?latitude=43.638779&longitude=-79.380653", headers=self.headers)
 
     # @task(221)
     # def get_mileage_daily(self):
@@ -206,63 +207,64 @@ class User(HttpUser):
     #
     #     self.client.get("/api/user/" + str(self.user_id) + "/schedule", headers=self.headers, name='/api/user/{user_id}/schedule')
 
-    @task
-    def get_user_schedule_v4(self):
-        #print_now(str(self.user_id))
-
-        self.client.get("/api/v4/user/" + str(self.user_id) + "/schedule", headers=self.headers, name='/api/v4/user/{user_id}/schedule')
-
-    # @task(3)
-    # def get_tracking_trips(self):
-    #     response = self.client.get("/tracking/trips", headers=self.headers)
-
-    @task(2)
-    def get_user(self):
-        #print_now(str(self.user_id))
-
-        self.client.get("/api/user", headers=self.headers)
-
-    @task(1)
-    def delete_tracking_trip(self):
-        #print_now(str(self.user_id))
-
-        trip = self.list_of_trips.pop()
-        if trip is None:
-            return
-        trip_id = str(trip['id'])
-        self.client.delete("/tracking/trip/" + trip_id, headers=self.headers, name='/tracking/trip/{trip_id}')
-
+    # @task
+    # def get_user_schedule_v4(self):
+    #     #print_now(str(self.user_id))
     #
-    @task(1)
-    def get_static_map(self):
-        #print_now(str(self.user_id))
-
-        lat_1 = "33.6400159"
-        long_1 = "-84.4195797"
-        lat_2 = "41.9178922"
-        long_2 = "-71.122965"
-        self.client.get(
-            "/api/v3/static_map?origin_lat=" + lat_1 + "&origin_lng=" + long_1 + "&dest_lat=" + lat_2 + "&dest_lng=" +
-            long_2,
-            headers=self.headers)
-
-    @task
-    def get_stops(self):
-        #print_now(str(self.user_id))
-
-        self.client.get("/api/stops", headers=self.headers)
+    #     self.client.get("/api/v4/user/" + str(self.user_id) + "/schedule", headers=self.headers, name='/api/v4/user/{user_id}/schedule')
+    #
+    # # @task(3)
+    # # def get_tracking_trips(self):
+    # #     response = self.client.get("/tracking/trips", headers=self.headers)
+    #
+    # @task(2)
+    # def get_user(self):
+    #     #print_now(str(self.user_id))
+    #
+    #     self.client.get("/api/user", headers=self.headers)
+    #
+    # @task(1)
+    # def delete_tracking_trip(self):
+    #     #print_now(str(self.user_id))
+    #
+    #     trip = self.list_of_trips.pop()
+    #     if trip is None:
+    #         return
+    #     trip_id = str(trip['id'])
+    #     self.client.delete("/tracking/trip/" + trip_id, headers=self.headers, name='/tracking/trip/{trip_id}')
+    #
+    # #
+    # @task(1)
+    # def get_static_map(self):
+    #     #print_now(str(self.user_id))
+    #
+    #     lat_1 = "33.6400159"
+    #     long_1 = "-84.4195797"
+    #     lat_2 = "41.9178922"
+    #     long_2 = "-71.122965"
+    #     self.client.get(
+    #         "/api/v3/static_map?origin_lat=" + lat_1 + "&origin_lng=" + long_1 + "&dest_lat=" + lat_2 + "&dest_lng=" +
+    #         long_2,
+    #         headers=self.headers)
+    #
+    # @task
+    # def get_stops(self):
+    #     #print_now(str(self.user_id))
+    #
+    #     self.client.get("/api/stops", headers=self.headers)
 
     def on_start(self):
         username = get_available_user()
         if username is not None:
-            response = self.client.post("/api/login",
+            response = self.client.post("https://api-staging.mi-route.com/api/login",
                                         json={"username": username,
                                               "password": password},
                                         headers=Helper.Helper.basic_header('en'))
 
             response_json = response.json()
-            if response.status_code == 504:
-                response = self.client.post("/api/login",
+            if response.status_code in (429, 504, 401):
+                time.sleep(1)
+                response = self.client.post("https://api-staging.mi-route.com/api/login",
                                             json={"username": username,
                                                   "password": password},
                                             headers=Helper.Helper.basic_header('en'))
