@@ -89,7 +89,7 @@ class User(HttpUser):
 
     @task
     def get_geocode(self):
-        self.client.get("/api/geocode?street=207", headers=self.headers)
+        self.client.get("/api/geocode?street=207 Queens Quay W&city=Toronto&state=ON&zip=M5J 1A7&country=CA", headers=self.headers)
 
     @task
     def get_reverse_geocode(self):
