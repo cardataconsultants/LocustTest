@@ -268,7 +268,7 @@ class User(HttpUser):
     def on_start(self):
         username = get_available_user()
         if username is not None:
-            response = self.client.post("/api/login",
+            response = self.client.post("https://api-staging.mi-route.com/api/login",
                                         json={"username": username,
                                               "password": password},
                                         headers=Helper.Helper.basic_header('en'))
@@ -276,7 +276,7 @@ class User(HttpUser):
             response_json = response.json()
             if response.status_code in (429, 504):
                 time.sleep(1)
-                response = self.client.post("/api/login",
+                response = self.client.post("https://api-staging.mi-route.com/api/login",
                                             json={"username": username,
                                                   "password": password},
                                             headers=Helper.Helper.basic_header('en'))
