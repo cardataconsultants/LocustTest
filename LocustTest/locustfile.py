@@ -297,7 +297,17 @@ class User(HttpUser):
                     self.company_id = "364"
                 else:
                     self.company_id = "93"
-
+                self.client.get(
+                    "https://map-staging.cardataconsultants.com/api/reverseGeocode?latitude=43.638779&longitude=-79.380653",
+                    name="/api/reverseGeocode", headers=self.headers)
+                self.client.get(
+                    "https://map-staging.cardataconsultants.com/api/geocode?street=207 Queens Quay W&city=Toronto&state=ON&zip=M5J 1A7&country=CA",
+                    name="/api/geocode", headers=self.headers)
+                self.client.get(
+                    "https://map-staging.cardataconsultants.com/api/getDistance?lat1=43.638779&lng1=-79.380653&lat2=43.873810&lng2=-78.963410&country=CA",
+                    name="/api/getDistance", headers=self.headers)
+                self.client.get("https://map-staging.cardataconsultants.com/api/getUnits/CA", name="/api/getUnits/CA",
+                                headers=self.headers)
                 # for i in range(0, 5):
                 #     trip = Helper.Helper.generate_tracking_trip_with_location(self.user_id, 43.638660, -79.387802)
                 #     self.client.post("/api/v3/trip", json=trip, headers=self.headers).json()
