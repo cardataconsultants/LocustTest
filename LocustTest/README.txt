@@ -27,7 +27,7 @@ AWS RUN:
 2.  ./horse.sh master start   # It may already be running. That's OK. Either way, it should also log in.
 
 3.  On this master server:
-      cd ~/LocustTest && git checkout && git pull && cd LocustTest && bash load_testing_master.sh
+      cd ~/LocustTest && git checkout . && git pull && cd LocustTest && bash load_testing_master.sh && ~/qa-docker/pushReportingToS3.sh && ls -lrt Reporting | tail -1 | awk '{print $NF}'
 
 4.  Open a terminal (B):
       cd qa-docker
@@ -35,15 +35,15 @@ AWS RUN:
 5   ./horse.sh worker start   # It may already be running. That's OK. Either way, it should also log in.
 
 6.  On this worker server:
-      cd ~/LocustTest && git checkout && git pull && cd LocustTest && bash load_testing_worker.sh
+      cd ~/LocustTest && git checkout . && git pull && cd LocustTest && sed -i  's/#--master/--master/g' load_testing_worker.sh && bash load_testing_worker.sh
 
 7.  On the master server:
       ~/qa-docker/pushReportingToS3.sh                 # To push the report to AWS Staging S3 bucket cd-qa/load-testing/
       ls -lrt Reporting | tail -1 | awk '{print $NF}'  # To get the name of the report you just ran
 
 8.  On your laptop, retrieve the report:
-      source ../cd-infra/bucket-cd-infra/set_env.sh staging && cd qa-docker && aws s3 cp s3://cd-qa/load-testing/report-locust-2024-____________.html .
+      source ../cd-infra/bucket-cd-infra/set_env.sh staging && cd qa-docker && aws s3 cp s3://cd-qa/load-testing/report-locust-2024-____________.html ~
+      Look for the report in your home dir.
 
 NOTE:
-
 For some reason, when I run this on AWS, the reporting is a little wonky and it doesn't produce HTML reports. However, when running on local, it reports correctly. 
