@@ -15,5 +15,8 @@ new=$(echo $rpt | sed 's/html/'$sys'.html/') && \
 mv $rpt $new                                 && \
 cd ..                                        && \
 ~/qa-docker/pushReportingToS3.sh             && \
-echo $new
+echo                                         && \
+echo "Run this on your laptop:"              && \
+echo "source ../cd-infra/bucket-cd-infra/set_env.sh staging && aws s3 cp s3://cd-qa/load-testing/$new ~"
+echo
 

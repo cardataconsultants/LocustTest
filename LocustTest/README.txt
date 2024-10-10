@@ -20,14 +20,16 @@ AWS RUN:
 0. On your laptop, get the latest repo of qa-docker:
       git clone git@github.com:cardataconsultants/qa-docker.git
       git clone git@github.com:cardataconsultants/cd-infra.git
-      cd qa-docker
 
 1.  Open a terminal (A):
+      cd qa-docker
 
 2.  ./horse.sh master start   # It may already be running. That's OK. Either way, it should also log in.
 
 3.  On this master server:
       cd ~/LocustTest && git checkout . && git pull && cd LocustTest && ./juka-master.sh EKS
+        OR
+      cd ~/LocustTest && git checkout . && git pull && cd LocustTest && ./juka-master.sh old
 
 4.  Open a terminal (B):
       cd qa-docker
@@ -37,12 +39,12 @@ AWS RUN:
 6.  On this worker server:
       cd ~/LocustTest && git checkout . && git pull && cd LocustTest && ./juka-worker.sh
 
-      ls -lrt Reporting | tail -1 | awk '{print $NF}'  # To get the name of the report you just ran
-
-8.  On your laptop, retrieve the report:
-      RPT_FILE=<paste_name_here_from_the_master>
-      source ../cd-infra/bucket-cd-infra/set_env.sh staging && aws s3 cp s3://cd-qa/load-testing/$RPT_FILE ~
+8.  Retrieve the report file:
+      On the master, cut the last line of output, and paste it onto your laptop to run.
       Look for the report in your home dir.
 
-NOTE:
-For some reason, when I run this on AWS, the reporting is a little wonky and it doesn't produce HTML reports. However, when running on local, it reports correctly. 
+9.  When done all testing, please shut down both servers:
+      cd qa-docker
+      ./horse.sh master stop
+      ./horse.sh worker stop
+
