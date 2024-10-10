@@ -27,7 +27,7 @@ AWS RUN:
 2.  ./horse.sh master start   # It may already be running. That's OK. Either way, it should also log in.
 
 3.  On this master server:
-      cd ~/LocustTest && git checkout . && git pull && cd LocustTest && bash load_testing_master.sh 500 0.1 10m; ~/qa-docker/pushReportingToS3.sh && ls -lrt Reporting | tail -1 | awk '{print $NF}'
+      cd ~/LocustTest && git checkout . && git pull && cd LocustTest && ./juka-master.sh EKS
 
 4.  Open a terminal (B):
       cd qa-docker
@@ -35,7 +35,7 @@ AWS RUN:
 5   ./horse.sh worker start   # It may already be running. That's OK. Either way, it should also log in.
 
 6.  On this worker server:
-      cd ~/LocustTest && git checkout . && git pull && cd LocustTest && sed -i  's/#--master/--master/g' load_testing_worker.sh && bash load_testing_worker.sh
+      cd ~/LocustTest && git checkout . && git pull && cd LocustTest && ./juka-worker.sh
 
       ls -lrt Reporting | tail -1 | awk '{print $NF}'  # To get the name of the report you just ran
 
