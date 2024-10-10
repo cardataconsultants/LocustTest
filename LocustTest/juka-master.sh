@@ -17,6 +17,6 @@ cd ..                                        && \
 ~/qa-docker/pushReportingToS3.sh             && \
 echo                                         && \
 echo "Run this on your laptop:"              && \
-echo "source ~$LAP_CODE/cd-infra/bucket-cd-infra/set_env.sh staging && aws s3 cp s3://cd-qa/load-testing/$new ~"
+echo "source \$LAP_CODE/cd-infra/bucket-cd-infra/set_env.sh staging && aws s3 cp s3://cd-qa/load-testing/$new ~"
 echo
 
